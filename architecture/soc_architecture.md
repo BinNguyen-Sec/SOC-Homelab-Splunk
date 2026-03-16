@@ -38,10 +38,10 @@ Functions:
 
 This screenshot shows the Splunk Enterprise SIEM successfully deployed on the SOC homelab server.
 
-![Splunk Dashboard](splunk_dashboard.png)
+![Splunk Dashboard](/screenshots/splunk/splunk_dashboard.png)
 
 ## Splunk SIEM SSH Ingestion
 
 This screenshot shows the Splunk Enterprise SIEM add a SSH ingestion successfully deployed on the SOC homelab server.
 
-![Splunk SSH Ingestion](splunk_ssh_ingestion.png)
+![Splunk SSH Ingestion](/screenshots/splunk/splunk_ssh_ingestion.png)

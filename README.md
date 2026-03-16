@@ -1,5 +1,11 @@
 # SOC Homelab – Splunk SIEM
 
+## Architecture Overview
+
+![SOC Architecture](/screenshots/architecture/soc_architecture.png)
+
+This SOC homelab simulates a small Security Operations Center environment where security events are generated, collected, and analyzed using Splunk SIEM.
+
 ## Project Overview
 
 This project demonstrates a **Security Operations Center (SOC) homelab** built to simulate real-world security monitoring and threat detection.
