@@ -33,3 +33,9 @@ Functions:
 - detection rules
 - dashboards
 - incident investigation
+
+## Splunk SIEM Dashboard
+
+This screenshot shows the Splunk Enterprise SIEM successfully deployed on the SOC homelab server.
+
+![Splunk Dashboard](splunk_dashboard.png)
