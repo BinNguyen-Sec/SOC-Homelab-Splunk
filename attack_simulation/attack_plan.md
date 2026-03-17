@@ -12,5 +12,6 @@ Command used:
 
 ```bash
 nmap -sS -sV 127.0.0.1
+```
 
 ![Nmap](../screenshots/attack/01_nmap_scan.png)
