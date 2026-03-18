@@ -32,7 +32,7 @@ Multiple failed login attempts were generated
 
 Logs were successfully ingested into Splunk in real-time
 
-Detection:
+**Detection:**
 ```bash
 index=* "Failed password"
 | stats count by src
@@ -42,3 +42,28 @@ This query identifies potential brute-force attacks by detecting repeated failed
 
 Evidence:
 ![Hydra_detection](../screenshots/splunk/hydra_dectection.png)
+
+**Alerting**
+A real-time alert was configured in Splunk:
+
+Runs every 1 minute
+
+Detects brute-force behavior based on threshold
+
+Generates alert when condition is met
+
+Evidence:
+![Alert](../screenshots/splunk/alert_config.png)
+
+**Notification**
+
+An email notification is sent when the alert is triggered.
+
+Provides immediate visibility to SOC analyst
+
+Includes attack details and source IP
+
+Supports faster incident response
+
+Evidence:
+![Notification](../screenshots/splunk/email_alert.png)
