@@ -67,3 +67,62 @@ When the alert is triggered, an email notification is sent to the SOC analyst.
 - Search results (failed login attempts)
 
 This enables real-time awareness and rapid response to brute-force attacks.
+
+
+
+### Rule: SSH Brute Force Detection
+
+**Description:**
+This detection rule identifies potential SQL Injection attacks by analyzing web server logs for suspicious patterns commonly used in SQL injection payloads.
+
+
+**Data Source**
+- Web server logs (Apache / DVWA)
+- File: web_logs.log
+- Sourcetype: access_combined (default)
+
+
+**Detection Logic**
+
+The rule searches for common SQL injection keywords and patterns such as:
+
+- `' OR 1=1`
+- `UNION SELECT`
+- `--`
+- `#`
+- `sleep()`
+
+
+**SPL Query**
+
+```spl
+index=web_logs 
+("UNION" OR "SELECT" OR "' OR" OR "--" OR "#")
+| stats count by clientip
+| where count > 2
+```
+
+**Alert Configuration**
+Alert Type: Real-time
+Time Range: Last 60 seconds
+Trigger Condition: Number of results > 0
+Trigger Mode: For each result
+
+
+**Alert Suppression**
+Suppress Duration: 60 seconds
+Suppress Field: clientip
+
+- Explanation:
+This prevents multiple alerts from being triggered by the same attacker within a short period of time, reducing alert fatigue.
+
+**Alert Action**
+- Action: Send Email
+- Content:
+- Source IP
+- Number of requests
+
+**Expected Outcome**
+- Detect SQL Injection attempts
+- Identify attacker IP address
+- Notify SOC analyst via email

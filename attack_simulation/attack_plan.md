@@ -71,3 +71,64 @@ Supports faster incident response
 Evidence:
 
 ![Notification](../screenshots/splunk/email_alert.png)
+
+### 3. Web Attack – SQL Injection (SQLMap)
+
+A SQL Injection attack was simulated against the DVWA web application using sqlmap.
+
+Command used:
+
+```bash
+sqlmap -u "http://127.0.0.1:8080/vulnerabilities/sqli/?id=1&Submit=Submit" \
+--cookie="security=low; PHPSESSID=xxx" \
+--batch --level=3 --risk=2
+```
+
+Result:
+
+Multiple malicious requests were sent to the web application
+
+SQL Injection payloads were successfully executed
+
+Web access logs were generated and streamed to Splunk in real-time
+
+![SQLMap](../screenshots/attack/03_sqlmap_attack.png)
+
+**Detection:**
+
+```spl
+index=main "/vulnerabilities/sqli/"
+| stats count by clientip
+| where count > 10
+```
+
+This query detects potential SQL Injection attacks by identifying a high number of requests from a single IP targeting the SQLi endpoint.
+
+Evidence:
+
+![Detection](../screenshots/splunk/sqlmap_querry_detection.png)
+
+**Alerting**
+
+A real-time alert was configured in Splunk:
+
+Runs every 1 minute
+Triggers when suspicious activity is detected
+Uses suppression (60s) to avoid duplicate alerts
+Groups alerts by clientip
+
+Evidence:
+
+![Alerting](../screenshots/splunk/sql_alert_config.png)
+
+**Notification**
+
+An email notification is sent when the alert is triggered:
+
+Contains attacker IP address
+Includes number of suspicious requests
+Helps SOC analyst quickly identify threats
+
+Evidence:
+
+1[Notification](../screenshots/splunk/sql_email_alert.png)
