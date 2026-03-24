@@ -105,7 +105,7 @@ The Splunk dashboard provides real-time visibility into security events:
 * Top attacking IP addresses
 * Suspicious authentication activity
 
-![Dashboard](../screenshots/dashboards/dashboard_overview.png)
+![Overview](screenshots/dashboards/dashboard_overview.png)
 
 ---
 
