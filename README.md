@@ -142,4 +142,5 @@ This project demonstrates practical skills required for a **SOC Analyst / Securi
 ## Author
 
 **Bin Nguyen**
+
 Security Engineering Enthusiast
