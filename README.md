@@ -1,110 +1,145 @@
-# SOC Homelab – Splunk SIEM
+# SOC HOMELAB - SPLUNK SIEM
 
-## Architecture Overview
+A hands-on Security Operations Center (SOC) homelab that simulates real-world cyber attacks and detects them using Splunk SIEM.
 
-![SOC Architecture](/screenshots/architecture/soc_architecture.png)
+This project demonstrates an end-to-end security monitoring pipeline:
 
-This SOC homelab simulates a small Security Operations Center environment where security events are generated, collected, and analyzed using Splunk SIEM.
-
-## Project Overview
-
-This project demonstrates a **Security Operations Center (SOC) homelab** built to simulate real-world security monitoring and threat detection.
-
-The lab focuses on practical SOC workflows including:
-
-* Security log collection
-* SIEM monitoring
-* Attack simulation
-* Threat detection
-* Incident investigation
-
-The environment uses **Splunk Enterprise** as the central SIEM platform to analyze logs and detect suspicious activities such as **SSH brute force attacks**.
+**Attack → Log Generation → Log Ingestion → Detection → Alerting → Visualization**
 
 ---
 
 ## Architecture
 
-The SOC homelab consists of several systems that generate and analyze security logs.
+![SOC Architecture](/screenshots/architecture/soc_architecture.png)
 
-Architecture components:
+The lab simulates a real SOC environment:
 
-* **Splunk SIEM Server** – Central platform for log ingestion and analysis
-* **Linux Server (Victim Machine)** – Generates authentication logs
-* **Windows Endpoint** – Generates Windows security events
-* **Attacker Machine** – Simulates attacks such as SSH brute force
-
-Security events generated from these systems are ingested into Splunk for monitoring and detection.
+* **Attacker Machine**: Kali Linux performing attacks
+* **Target Systems**: Linux server (SSH logs), Windows endpoint (event logs)
+* **Log Sources**: `/var/log/ssh.log`, `/var/log/web.log`, Windows Security Logs
+* **SIEM**: Splunk Enterprise for log ingestion, parsing, and detection
+* **Security Analyst**: Investigates alerts and monitors dashboards
 
 ---
 
-## Lab Environment
+## Technologies Used
 
-| Component         | Role                              |
-| ----------------- | --------------------------------- |
-| Kali Linux        | Attacker machine                  |
-| Linux Server      | Target system generating SSH logs |
-| Windows Endpoint  | Endpoint generating event logs    |
-| Splunk Enterprise | SIEM platform                     |
+* Splunk Enterprise (SIEM)
+* Kali Linux
+* DVWA (Damn Vulnerable Web Application)
+* Hydra (Brute-force attack tool)
+* Nmap (Network scanning)
+* Linux SSH Logs
+* Windows Event Logs
 
 ---
 
 ## Attack Simulation
 
-Example attack scenario implemented in this lab:
+### 1. Network Scanning (Nmap)
 
-### SSH Brute Force Attack
+* **Command:**
 
-An attacker attempts multiple SSH login attempts against the Linux server using a password brute force tool.
-
-These attempts generate multiple **failed authentication events** in system logs which are later analyzed by Splunk.
+  ```bash
+  nmap -sS <target-ip>
+  ```
+* **Objective:** Discover open ports and services
 
 ---
 
-## Detection Example
+### 2. SSH Brute-force Attack (Hydra)
 
-Example Splunk query used to detect brute-force activity:
+* **Command:**
 
-```
+  ```bash
+  hydra -l admin -P rockyou.txt ssh://<target-ip>
+  ```
+* **Objective:** Attempt unauthorized access via credential brute-force
+
+---
+
+### 3. SQL Injection (DVWA)
+
+* **Payload:**
+
+  ```sql
+  ' OR '1'='1
+  ```
+* **Objective:** Bypass authentication and exploit web vulnerabilities
+
+---
+
+## Detection Engineering
+
+### SSH Brute-force Detection
+
+```spl
 index=main "Failed password"
-| stats count by src
+| rex "from (?<src>\d+\.\d+\.\d+\.\d+)"
+| bin _time span=1m
+| stats count by _time, src
 | where count > 5
 ```
 
-This query identifies IP addresses that have attempted multiple failed login attempts.
+**Description:**
+Detects multiple failed login attempts from a single IP address within a short time window, indicating a potential brute-force attack.
 
 ---
 
-## Screenshots
+## Alerting
 
-Example screenshots from the SOC homelab environment:
+* **Trigger Condition:** Failed login attempts exceed threshold
+* **Detection Type:** Real-time search
+* **Action:** Email notification
 
-* Splunk SIEM dashboard
-* Log ingestion from Linux systems
-* SSH brute force detection results
-
-(Screenshots available in the `/screenshots` directory)
+**Purpose:**
+Enable rapid incident response by notifying security analysts when suspicious activity is detected.
 
 ---
 
-## Skills Demonstrated
+## Dashboard
 
-This project demonstrates practical skills in:
+The Splunk dashboard provides real-time visibility into security events:
 
-* Security Information and Event Management (SIEM)
+* Failed login attempts over time
+* Top attacking IP addresses
+* Suspicious authentication activity
+
+![Dashboard](../screenshots/dashboards/dashboard_overview.png)
+
+---
+
+## Key Learnings
+
+* Built an end-to-end SOC monitoring pipeline
+* Performed real-world attack simulations
+* Developed SPL detection queries
+* Implemented alerting mechanisms in Splunk
+* Gained hands-on experience with SIEM operations
+
+---
+
+## Future Improvements
+
+* Add advanced detection rules (correlation-based detection)
+* Integrate threat intelligence feeds
+* Expand log sources (firewall, IDS/IPS)
+* Build incident response playbooks
+
+---
+
+## Project Value
+
+This project demonstrates practical skills required for a **SOC Analyst / Security Engineer** role, including:
+
 * Log analysis
-* Threat detection
-* Security monitoring
-* Linux log analysis
-* Splunk query language
-* Incident investigation
+* Detection engineering
+* SIEM configuration
+* Threat detection and monitoring
 
 ---
 
-## Project Purpose
+## Author
 
-The purpose of this lab is to simulate **real-world SOC analyst workflows** including:
-
-1. Monitoring security logs
-2. Detecting suspicious activity
-3. Investigating security events
-4. Understanding attacker behavior
+**Bin Nguyen**
+Security Engineering Enthusiast
